@@ -10,7 +10,6 @@ $(document).on('ready', function(){
 
 	search.init();
 	// var testing = new MyGlobal.originAutocomplete();
-
 	$('#calculate-route').off('reset').on('reset', function(){
 		console.log('reset');
 		search.init();
@@ -46,62 +45,60 @@ MapSearch.prototype = {
 	init: function() {
 		var me = this;
 		this.initializeMap();
-		this.origin_autocomplete();
-		// MyGlobal.originAutocomplete(this.map, this.originInputElement);
-		this.destination_autocomplete();
+		this.autocomplete = new MyGlobal.autocomplete(this.map, this.originInputElement, this.destinationInputElement);
 		this.directionsInitialize();
 		this.placesService = new google.maps.places.PlacesService(this.map);
 	},
 	initializeMap: function(){
 		this.map = MyGlobal.map();
 	},
-	origin_autocomplete: function(){
-		var origin_autocomplete = new google.maps.places.Autocomplete(this.originInputElement);
-		origin_autocomplete.bindTo('bounds', this.map);
-
-		var me = this;
-		origin_autocomplete.addListener('place_changed', function() {
-			var place = origin_autocomplete.getPlace();
-			if (!place.geometry) {
-				window.alert("Autocomplete's returned place contains no geometry");
-				return;
-			}
-			// If the place has a geometry, store its place ID and route if we have
-			// the other place ID
-			me.origin_place_id = place.place_id;
-			me.zoom(place);
-		});
-	},
-	destination_autocomplete: function(){
-		var destination_autocomplete = new google.maps.places.Autocomplete(this.destinationInputElement);
-		destination_autocomplete.bindTo('bounds', this.map);
-
-		var me = this;
-		destination_autocomplete.addListener('place_changed', function() {
-			var place = destination_autocomplete.getPlace();
-			if (!place.geometry) {
-				window.alert("Autocomplete's returned place contains no geometry");
-				return;
-			}
-			// If the place has a geometry, store its place ID and route if we have
-			// the other place ID
-			me.destination_place_id = place.place_id;
-			me.zoom(place);
-		});
-	},
+	// origin_autocomplete: function(){
+	// 	var origin_autocomplete = new google.maps.places.Autocomplete(this.originInputElement);
+	// 	origin_autocomplete.bindTo('bounds', this.map);
+	//
+	// 	var me = this;
+	// 	origin_autocomplete.addListener('place_changed', function() {
+	// 		var place = origin_autocomplete.getPlace();
+	// 		if (!place.geometry) {
+	// 			window.alert("Autocomplete's returned place contains no geometry");
+	// 			return;
+	// 		}
+	// 		// If the place has a geometry, store its place ID and route if we have
+	// 		// the other place ID
+	// 		me.origin_place_id = place.place_id;
+	// 		me.zoom(place);
+	// 	});
+	// },
+	// destination_autocomplete: function(){
+	// 	var destination_autocomplete = new google.maps.places.Autocomplete(this.destinationInputElement);
+	// 	destination_autocomplete.bindTo('bounds', this.map);
+	//
+	// 	var me = this;
+	// 	destination_autocomplete.addListener('place_changed', function() {
+	// 		var place = destination_autocomplete.getPlace();
+	// 		if (!place.geometry) {
+	// 			window.alert("Autocomplete's returned place contains no geometry");
+	// 			return;
+	// 		}
+	// 		// If the place has a geometry, store its place ID and route if we have
+	// 		// the other place ID
+	// 		me.destination_place_id = place.place_id;
+	// 		me.zoom(place);
+	// 	});
+	// },
 	directionsInitialize: function(){
 		this.directionsDisplay = new google.maps.DirectionsRenderer();
 		this.directionsDisplay.setMap(this.map);
 		this.directionsService = new google.maps.DirectionsService();
 	},
-	zoom: function(place){
-		if (place.geometry.viewport) {
-			this.map.fitBounds(place.geometry.viewport);
-		} else {
-			this.map.setCenter(place.geometry.location);
-			this.map.setZoom(17);
-		}
-	},
+	// zoom: function(place){
+	// 	if (place.geometry.viewport) {
+	// 		this.map.fitBounds(place.geometry.viewport);
+	// 	} else {
+	// 		this.map.setCenter(place.geometry.location);
+	// 		this.map.setZoom(17);
+	// 	}
+	// },
 	resetPlaceIds: function(){
 		this.destination_place_id = null;
 		this.origin_place_id = null;
@@ -116,6 +113,10 @@ MapSearch.prototype = {
 	generateRoute: function(){
 		var me = this;
 		// me.origin_place_id = MyGlobal.originPlaceId;
+		// me.destination_place_id = MyGlobal.destinationPlaceId;
+		me.origin_place_id = this.autocomplete.originPlaceId
+		me.destination_place_id = this.autocomplete.destinationPlaceId
+
 		if (!me.origin_place_id || !me.destination_place_id) {
 			return;
 		}

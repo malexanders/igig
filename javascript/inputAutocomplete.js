@@ -1,6 +1,12 @@
 $(document).on('ready', function(){
-	MyGlobal.originAutocomplete = function(map, inputElement){
-		var origin_autocomplete = new google.maps.places.Autocomplete(inputElement);
+	MyGlobal.autocomplete = function (map, originInputElement, destinationInputElement){
+		var me = this;
+		this.originPlace;
+		this.originPlaceId;
+		this.destinationPlace;
+		this.destinationPlaceId;
+
+		var origin_autocomplete = new google.maps.places.Autocomplete(originInputElement);
 		origin_autocomplete.bindTo('bounds', map);
 		origin_autocomplete.addListener('place_changed', function() {
 			var place = origin_autocomplete.getPlace();
@@ -8,16 +14,15 @@ $(document).on('ready', function(){
 				window.alert("Autocomplete's returned place contains no geometry");
 				return;
 			}
-			MyGlobal.originPlace = place;
-			MyGlobal.originPlaceId = place.place_id;
+			// MyGlobal.originPlace = place;
+			// MyGlobal.originPlaceId = place.place_id;
 			MyGlobal.zoom(map, place);
+			me.originPlace = place;
+			me.originPlaceId = place.place_id;
 		});
-	}
 
-	MyGlobal.destinationAutocomplete = function(map, inputElement){
-		var destination_autocomplete = new google.maps.places.Autocomplete(this.destinationInputElement);
+		var destination_autocomplete = new google.maps.places.Autocomplete(destinationInputElement);
 		destination_autocomplete.bindTo('bounds', map);
-		var me = this;
 		destination_autocomplete.addListener('place_changed', function() {
 			var place = destination_autocomplete.getPlace();
 			if (!place.geometry) {
@@ -26,11 +31,14 @@ $(document).on('ready', function(){
 			}
 			// If the place has a geometry, store its place ID and route if we have
 			// the other place ID
-			me.destination_place_id = place.place_id;
-			me.zoom(place);
+			// MyGlobal.destinationPlace = place;
+			// MyGlobal.destinationPlaceId = place.place_id;
+			MyGlobal.zoom(map, place);
+			me.destinationPlace = place;
+			me.destinationPlaceId = place.place_id;
 		});
-	}
 
+	}
 
 })
 
