@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	  <meta charset="UTF-8">
+	  <title>Document</title>
+	  <link rel="stylesheet" type="text/css" href="/Users/Macbook/projects/igig/css/main.css">
+	  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAWoiLS-AGKIEJBOr1RfYggDfxG2tWmvbg&libraries=places"></script>
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+	  <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/routeboxer/src/RouteBoxer.js"></script>
+
+	</head>
+	<body>
+	  <div class="app-wrapper">
+
+	    <h1>Calculate your route</h1>
+	    <form id="calculate-route" name="calculate-route" action="#" method="get">
+
+	      <label for="from">From:</label>
+	      <input type="text" id="from" name="from" required="required" placeholder="Point A" size="30" />
+	      <!-- <a id="from-link" href="#">Get my position</a> -->
+	      <br />
+
+	      <label for="to">To:</label>
+	      <input type="text" id="to" name="to" required="required" placeholder="Point B" size="30" />
+	      <!-- <a id="to-link" href="#">Get my position</a> -->
+	      <br />
+
+		  <label for="radius">Radius:</label>
+	      <input type="text" id="radius" name="radius" required="required" placeholder="radius" size="30" />
+	      <!-- <a id="to-link" href="#">Get my position</a> -->
+	      <br />
+
+		  <label for="search">Search:</label>
+		  <input type="text" id="search" name="search" required="required" placeholder="search" size="30" />
+	      <!-- <a id="to-link" href="#">Get my position</a> -->
+	      <br />
+
+	      <!-- Don't need submit button with autocomplete! -->
+	      <input type="submit" />
+	      <input type="reset" />
+	    </form>
+
+	    <!-- <div id="mode-selector" class="controls">
+	      <input type="radio" name="type" id="changemode-walking" checked="checked">
+	      <label for="changemode-walking">Walking</label>
+
+	      <input type="radio" name="type" id="changemode-transit">
+	      <label for="changemode-transit">Transit</label>
+
+	      <input type="radio" name="type" id="changemode-driving">
+	      <label for="changemode-driving">Driving</label>
+	    </div> -->
+
+	    <div id="map"></div>
+	  </div>
+
+	</body>
+	<!-- <script src="/Users/Macbook/projects/igig/javascript/zoomInOnPlace.js"></script>
+	<script src="/Users/Macbook/projects/igig/javascript/inputAutocomplete.js"></script> -->
+	<script src="/Users/Macbook/projects/igig/javascript/initializeMap.js"></script>
+	<script src="/Users/Macbook/projects/igig/javascript/search_map.js"></script>
+
+</html>
