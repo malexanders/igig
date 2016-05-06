@@ -1,5 +1,5 @@
 $(document).on('ready', function(){
-	MyGlobal.map = function MyMap(){
+	MyGlobal.map = function(){
 		var map = new google.maps.Map(document.getElementById('map'), {
 			center: new google.maps.LatLng(0,0),
 			zoom: 1,

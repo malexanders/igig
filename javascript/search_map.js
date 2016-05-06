@@ -21,19 +21,19 @@ $(document).on('ready', function(){
 		console.log('submit');
 		search.boxes.radius = parseFloat(document.getElementById("radius").value);
 		search.query = document.getElementById("search").value
+		// search.placeInputs.originPlaceId
+		// search.placeInputs.destinationPlaceId
 		search.generateRoute();
 	})
 })
 
 function MapSearch(config){
-	this.boxes = config.Boxes;
 	this.map;
-	this.originPlace;
-	this.origin_place_id;
-	this.destination_place_id;
-	this.directionsDisplay;
 	this.query;
 	this.places = [];
+	this.placeInputIds;
+	this.placesService;
+	this.boxes = config.Boxes;
 }
 
 MapSearch.prototype = {
@@ -45,63 +45,21 @@ MapSearch.prototype = {
 	init: function() {
 		var me = this;
 		this.initializeMap();
-		this.autocomplete = new MyGlobal.autocomplete(this.map, this.originInputElement, this.destinationInputElement);
 		this.directionsInitialize();
+		this.placeInputIds = new MyGlobal.inputAutocomplete(this.map, this.originInputElement, this.destinationInputElement);
 		this.placesService = new google.maps.places.PlacesService(this.map);
 	},
 	initializeMap: function(){
 		this.map = MyGlobal.map();
 	},
-	// origin_autocomplete: function(){
-	// 	var origin_autocomplete = new google.maps.places.Autocomplete(this.originInputElement);
-	// 	origin_autocomplete.bindTo('bounds', this.map);
-	//
-	// 	var me = this;
-	// 	origin_autocomplete.addListener('place_changed', function() {
-	// 		var place = origin_autocomplete.getPlace();
-	// 		if (!place.geometry) {
-	// 			window.alert("Autocomplete's returned place contains no geometry");
-	// 			return;
-	// 		}
-	// 		// If the place has a geometry, store its place ID and route if we have
-	// 		// the other place ID
-	// 		me.origin_place_id = place.place_id;
-	// 		me.zoom(place);
-	// 	});
-	// },
-	// destination_autocomplete: function(){
-	// 	var destination_autocomplete = new google.maps.places.Autocomplete(this.destinationInputElement);
-	// 	destination_autocomplete.bindTo('bounds', this.map);
-	//
-	// 	var me = this;
-	// 	destination_autocomplete.addListener('place_changed', function() {
-	// 		var place = destination_autocomplete.getPlace();
-	// 		if (!place.geometry) {
-	// 			window.alert("Autocomplete's returned place contains no geometry");
-	// 			return;
-	// 		}
-	// 		// If the place has a geometry, store its place ID and route if we have
-	// 		// the other place ID
-	// 		me.destination_place_id = place.place_id;
-	// 		me.zoom(place);
-	// 	});
-	// },
 	directionsInitialize: function(){
 		this.directionsDisplay = new google.maps.DirectionsRenderer();
 		this.directionsDisplay.setMap(this.map);
 		this.directionsService = new google.maps.DirectionsService();
 	},
-	// zoom: function(place){
-	// 	if (place.geometry.viewport) {
-	// 		this.map.fitBounds(place.geometry.viewport);
-	// 	} else {
-	// 		this.map.setCenter(place.geometry.location);
-	// 		this.map.setZoom(17);
-	// 	}
-	// },
 	resetPlaceIds: function(){
-		this.destination_place_id = null;
-		this.origin_place_id = null;
+		this.placeInputs.destinationPlaceId = null;
+		this.placeInputs.originPlaceId = null;
 	},
 	grabFirstRoute: function(response){
 		return response.routes[0].overview_path; // first route from directions service response
@@ -112,25 +70,24 @@ MapSearch.prototype = {
 	},
 	generateRoute: function(){
 		var me = this;
-		// me.origin_place_id = MyGlobal.originPlaceId;
-		// me.destination_place_id = MyGlobal.destinationPlaceId;
-		me.origin_place_id = this.autocomplete.originPlaceId
-		me.destination_place_id = this.autocomplete.destinationPlaceId
 
-		if (!me.origin_place_id || !me.destination_place_id) {
+		var originPlaceId = this.placeInputIds.originPlaceId
+		var destinationPlaceId = this.placeInputIds.destinationPlaceId
+
+		if (!originPlaceId || !destinationPlaceId) {
 			return;
 		}
 
 		me.directionsService.route({
-			origin: {'placeId': me.origin_place_id},
-			destination: {'placeId': me.destination_place_id},
+			origin: {'placeId': originPlaceId},
+			destination: {'placeId': destinationPlaceId},
 			travelMode: me.travel_mode
 		}, function(response, status){
 			if (status === google.maps.DirectionsStatus.OK) {
 				me.directionsDisplay.setDirections(response);
 
 				// Box Around the overview path of the first route
-				if (me.origin_place_id && me.destination_place_id) {
+				if (originPlaceId && destinationPlaceId) {
 					var path = me.grabFirstRoute(response);
 					me.initBoxes(path, me.map);
 					me.searchByBoxes(me.boxes.bounds);
@@ -271,7 +228,7 @@ function placeExists(placeID){
 //   var radioButton = document.getElementById(id);
 //   radioButton.addEventListener('click', function() {
 //     travel_mode = mode;
-//     route(origin_place_id, destination_place_id, travel_mode,
+//     route(originPlaceId, destinationPlaceId, travel_mode,
 //           directionsService, directionsDisplay);
 //   });
 // }
