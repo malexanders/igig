@@ -25,20 +25,16 @@ $(document).on('ready', function(){
 			directionsService: search.directionsService,
 			directionsDisplay: search.directionsDisplay,
 			travel_mode: search.travel_mode
-		}, function(){bootstrapRouteBoxes()});
-
-		function bootstrapRouteBoxes(){
+		})
+		.then(function(response){
 			var routeBoxes = new MyGlobal.routeBoxes({
 				radius: parseFloat(document.getElementById("radius").value),
-				path: routeSearch.grabFirstRoute(),
+				path: response.routes[0].overview_path,
 				map: search.map
 			});
 			routeBoxes.draw();
 			// searchByBoxes(routeBoxes.bounds);
-		}
-
-
-
+		});
 	})
 })
 
