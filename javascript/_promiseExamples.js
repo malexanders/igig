@@ -1,3 +1,22 @@
+var resultPromise = fetchResult();
+
+var routeSearch = new MyGlobal.findRoutes({
+	originPlaceId: search.placeInputIds.originPlaceId,
+	destinationPlaceId: search.placeInputIds.destinationPlaceId,
+	directionsService: search.directionsService,
+	directionsDisplay: search.directionsDisplay,
+	travel_mode: search.travel_mode
+});
+
+routeSearch.then(function(result){
+
+})
+
+resultPromise.then(function(result) {
+    console.log('got result', result);
+});
+
+
 function testPromiseRev0() {
 	var log = document.getElementById('log');
 
@@ -16,15 +35,27 @@ function testPromiseRev0() {
 
 	p1.then(
 		// Log the fulfillment value
-		function(val) {
-			log.insertAdjacentHTML('beforeend', val +
+		function(response) {
+			log.insertAdjacentHTML('beforeend', response +
 				') Promise fulfilled (<small>Async code terminated</small>)<br/>');
+			var routeBoxes = new MyGlobal.routeBoxes({
+				radius: parseFloat(document.getElementById("radius").value),
+				path: routeSearch.grabFirstRoute(),
+				map: search.map
+			});
+			routeBoxes.draw();
+			searchByBoxes(routeBoxes.bounds);
 		})
+	p1.then(
+		function(){
+
+		}
 	.catch(
 		// Log the rejection reason
 		function(reason) {
 			console.log('Handle rejected promise ('+reason+') here.');
 		});
+	)
 }
 
 function testPromiseRev1() {

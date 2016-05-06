@@ -13,6 +13,7 @@ $(document).on('ready', function(){
 		if (!config.originPlaceId || !config.destinationPlaceId) {
 			return;
 		}
+
 		config.directionsService.route({
 			origin: {'placeId': config.originPlaceId},
 			destination: {'placeId': config.destinationPlaceId},

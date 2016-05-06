@@ -19,8 +19,6 @@ $(document).on('ready', function(){
 		console.log('submit');
 		search.query = document.getElementById("search").value;
 
-		'use strict';
-
 		var routeSearch = new MyGlobal.findRoutes({
 			originPlaceId: search.placeInputIds.originPlaceId,
 			destinationPlaceId: search.placeInputIds.destinationPlaceId,
@@ -36,7 +34,11 @@ $(document).on('ready', function(){
 				map: search.map
 			});
 			routeBoxes.draw();
+			// searchByBoxes(routeBoxes.bounds);
 		}
+
+
+
 	})
 })
 
