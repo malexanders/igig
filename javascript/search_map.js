@@ -21,7 +21,14 @@ $(document).on('ready', function(){
 		console.log('submit');
 		search.boxes.radius = parseFloat(document.getElementById("radius").value);
 		search.query = document.getElementById("search").value;
-		MyGlobal.generateRoute(search.routeRequestParams());
+		var routeSearch = new MyGlobal.findRoutes({
+			originPlaceId: search.placeInputIds.originPlaceId,
+			destinationPlaceId: search.placeInputIds.destinationPlaceId,
+			directionsService: search.directionsService,
+			directionsDisplay: search.directionsDisplay,
+			travel_mode: search.travel_mode
+		});
+
 	})
 })
 
@@ -37,7 +44,6 @@ function MapSearch(config){
 MapSearch.prototype = {
 	originInputElement: document.getElementById('from'),
 	destinationInputElement: document.getElementById('to'),
-
 	directionsService: {},
 	placesService: {},
 	travel_mode: google.maps.TravelMode.DRIVING,
@@ -70,9 +76,7 @@ MapSearch.prototype = {
 		this.placeInputs.destinationPlaceId = null;
 		this.placeInputs.originPlaceId = null;
 	},
-	grabFirstRoute: function(response){
-		return response.routes[0].overview_path; // first route from directions service response
-	},
+
 	initBoxes: function(path, map){
 		this.boxes.setBounds(path);
 		this.boxes.draw(map);
