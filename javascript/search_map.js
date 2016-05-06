@@ -20,10 +20,8 @@ $(document).on('ready', function(){
 		event.preventDefault();
 		console.log('submit');
 		search.boxes.radius = parseFloat(document.getElementById("radius").value);
-		search.query = document.getElementById("search").value
-		// search.placeInputs.originPlaceId
-		// search.placeInputs.destinationPlaceId
-		search.generateRoute();
+		search.query = document.getElementById("search").value;
+		MyGlobal.generateRoute(search.routeRequestParams());
 	})
 })
 
@@ -32,13 +30,14 @@ function MapSearch(config){
 	this.query;
 	this.places = [];
 	this.placeInputIds;
-	this.placesService;
+	this.routeRequest;
 	this.boxes = config.Boxes;
 }
 
 MapSearch.prototype = {
 	originInputElement: document.getElementById('from'),
 	destinationInputElement: document.getElementById('to'),
+
 	directionsService: {},
 	placesService: {},
 	travel_mode: google.maps.TravelMode.DRIVING,
@@ -48,6 +47,16 @@ MapSearch.prototype = {
 		this.directionsInitialize();
 		this.placeInputIds = new MyGlobal.inputAutocomplete(this.map, this.originInputElement, this.destinationInputElement);
 		this.placesService = new google.maps.places.PlacesService(this.map);
+
+	},
+	routeRequestParams: function(){
+		return  {
+					originPlaceId: this.placeInputIds.originPlaceId,
+					destinationPlaceId: this.placeInputIds.destinationPlaceId,
+					directionsService: this.directionsService,
+					directionsDisplay: this.directionsDisplay,
+					travel_mode: this.travel_mode
+				};
 	},
 	initializeMap: function(){
 		this.map = MyGlobal.map();
@@ -67,36 +76,6 @@ MapSearch.prototype = {
 	initBoxes: function(path, map){
 		this.boxes.setBounds(path);
 		this.boxes.draw(map);
-	},
-	generateRoute: function(){
-		var me = this;
-
-		var originPlaceId = this.placeInputIds.originPlaceId
-		var destinationPlaceId = this.placeInputIds.destinationPlaceId
-
-		if (!originPlaceId || !destinationPlaceId) {
-			return;
-		}
-
-		me.directionsService.route({
-			origin: {'placeId': originPlaceId},
-			destination: {'placeId': destinationPlaceId},
-			travelMode: me.travel_mode
-		}, function(response, status){
-			if (status === google.maps.DirectionsStatus.OK) {
-				me.directionsDisplay.setDirections(response);
-
-				// Box Around the overview path of the first route
-				if (originPlaceId && destinationPlaceId) {
-					var path = me.grabFirstRoute(response);
-					me.initBoxes(path, me.map);
-					me.searchByBoxes(me.boxes.bounds);
-				}
-			} else {
-				window.alert('Directions request failed due to ' + status);
-
-			}
-		});
 	},
 	searchByBoxes: function(bounds){
 		var me = this;
