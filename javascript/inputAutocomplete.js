@@ -38,8 +38,3 @@ $(document).on('ready', function(){
 	}
 
 })
-
-
-// destinationAutocomplete: function(){
-
-// },

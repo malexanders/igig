@@ -7,5 +7,4 @@ $(document).on('ready', function(){
 			map.setZoom(17);
 		}
 	}
-
 })

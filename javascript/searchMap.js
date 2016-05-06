@@ -4,12 +4,10 @@ var MyGlobal = {};
 
 $(document).on('ready', function(){
 
-	var search = new MapSearch({
-		// Boxes: Boxes
-	});
+	var search = new MapSearch();
 
 	search.init();
-	// var testing = new MyGlobal.originAutocomplete();
+
 	$('#calculate-route').off('reset').on('reset', function(){
 		console.log('reset');
 		search.init();
@@ -21,14 +19,7 @@ $(document).on('ready', function(){
 		console.log('submit');
 		search.query = document.getElementById("search").value;
 
-		function bootstrapRouteBoxes(){
-			var routeBoxes = new MyGlobal.routeBoxes({
-				radius: parseFloat(document.getElementById("radius").value),
-				path: routeSearch.grabFirstRoute(),
-				map: search.map
-			});
-			routeBoxes.draw();
-		}
+		'use strict';
 
 		var routeSearch = new MyGlobal.findRoutes({
 			originPlaceId: search.placeInputIds.originPlaceId,
@@ -38,6 +29,14 @@ $(document).on('ready', function(){
 			travel_mode: search.travel_mode
 		}, function(){bootstrapRouteBoxes()});
 
+		function bootstrapRouteBoxes(){
+			var routeBoxes = new MyGlobal.routeBoxes({
+				radius: parseFloat(document.getElementById("radius").value),
+				path: routeSearch.grabFirstRoute(),
+				map: search.map
+			});
+			routeBoxes.draw();
+		}
 	})
 })
 
@@ -47,7 +46,6 @@ function MapSearch(config){
 	this.places = [];
 	this.placeInputIds;
 	this.routeRequest;
-	// this.boxes = config.Boxes;
 }
 
 MapSearch.prototype = {
@@ -62,16 +60,6 @@ MapSearch.prototype = {
 		this.directionsInitialize();
 		this.placeInputIds = new MyGlobal.inputAutocomplete(this.map, this.originInputElement, this.destinationInputElement);
 		this.placesService = new google.maps.places.PlacesService(this.map);
-
-	},
-	routeRequestParams: function(){
-		return  {
-					originPlaceId: this.placeInputIds.originPlaceId,
-					destinationPlaceId: this.placeInputIds.destinationPlaceId,
-					directionsService: this.directionsService,
-					directionsDisplay: this.directionsDisplay,
-					travel_mode: this.travel_mode
-				};
 	},
 	initializeMap: function(){
 		this.map = MyGlobal.map();
@@ -85,10 +73,6 @@ MapSearch.prototype = {
 		this.placeInputs.destinationPlaceId = null;
 		this.placeInputs.originPlaceId = null;
 	},
-	// initBoxes: function(path, map){
-	// 	this.boxes.setBounds(path);
-	// 	this.boxes.draw(map);
-	// },
 	searchByBoxes: function(bounds){
 		var me = this;
 		for (var i = 0; i < bounds.length; i++) {

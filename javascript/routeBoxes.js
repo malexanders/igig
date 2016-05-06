@@ -4,13 +4,13 @@ $(document).on('ready', function(){
 		this.path = config.path;
 		this.map = config.map;
 		this.routeBoxer = new RouteBoxer();
-
+		this.bounds;
 		this.draw = function(){
-			var bounds = this.routeBoxer.box(this.path, this.radius);
-			this.boxpolys = new Array(bounds.length);
-			for (var i = 0; i < bounds.length; i++) {
+			this.bounds = this.routeBoxer.box(this.path, this.radius);
+			this.boxpolys = new Array(this.bounds.length);
+			for (var i = 0; i < this.bounds.length; i++) {
 				this.boxpolys[i] = new google.maps.Rectangle({
-					bounds: bounds[i],
+					bounds: this.bounds[i],
 					fillOpacity: 0,
 					strokeOpacity: 1.0,
 					strokeColor: '#000000',
@@ -27,7 +27,6 @@ $(document).on('ready', function(){
 			}
 			this.boxpolys = null;
 		};
-
 	}
 
 	// Box Around the overview path of the first route
