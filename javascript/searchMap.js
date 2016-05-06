@@ -33,7 +33,8 @@ $(document).on('ready', function(){
 				map: search.map
 			});
 			routeBoxes.draw();
-			// searchByBoxes(routeBoxes.bounds);
+			MyGlobal.radarSearchByBoxes(routeBoxes.bounds);
+
 		});
 	})
 })
@@ -70,41 +71,6 @@ MapSearch.prototype = {
 	resetPlaceIds: function(){
 		this.placeInputs.destinationPlaceId = null;
 		this.placeInputs.originPlaceId = null;
-	},
-	searchByBoxes: function(bounds){
-		var me = this;
-		for (var i = 0; i < bounds.length; i++) {
-		   (function(i) {
-			   setTimeout(function() {
-				   // Perform search on the bound and save the result
-				   me.radarSearch(bounds[i]);
-				   //If the last box
-				   if ((bounds.length - 1) === i) {
-					me.addMarkers(this.places);
-				   }
-			   }, 1000 * i);
-		   }(i));
-		}
-	},
-	radarSearch: function(bound){
-		var me = this;
-		var request = {
-			bounds: bound,
-			keyword: me.query
-		};
-		me.placesService.radarSearch(request, function(results, status){
-			if (status !== google.maps.places.PlacesServiceStatus.OK) {
-				console.error(status);
-				return;
-			}
-			for (var i = 0; i < results.length; i++) {
-			// Go through each result from the search and if the place exist already in our list of places then done push it in to the array
-			// if (!placeExists(result.id)) {
-				var result = results[i];
-				me.places.push(result);
-			// }
-			}
-		});
 	},
 	addMarkers: function (){
 		var me = this;
