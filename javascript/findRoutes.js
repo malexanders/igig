@@ -1,5 +1,5 @@
 $(document).on('ready', function(){
-	MyGlobal.findRoutes = function(request){
+	MyGlobal.findRoutes = function(request, callback){
 		var me = this;
 		this.response;
 		this.grabFirstRoute = function(){
@@ -17,16 +17,10 @@ $(document).on('ready', function(){
 			if (status === google.maps.DirectionsStatus.OK) {
 				me.response = response;
 				request.directionsDisplay.setDirections(response);
-				// Box Around the overview path of the first route
-				// if (originPlaceId && destinationPlaceId) {
-				// 	var path = me.grabFirstRoute(response);
-				// 	me.initBoxes(path, me.map);
-				// 	me.searchByBoxes(me.boxes.bounds);
-				// }
+				callback();
 			} else {
 				window.alert('Directions request failed due to ' + status);
 			}
 		});
-
 	}
 })

@@ -5,7 +5,7 @@ var MyGlobal = {};
 $(document).on('ready', function(){
 
 	var search = new MapSearch({
-		Boxes: Boxes
+		// Boxes: Boxes
 	});
 
 	search.init();
@@ -19,15 +19,24 @@ $(document).on('ready', function(){
 	$('#calculate-route').off('submit').on('submit', function(event){
 		event.preventDefault();
 		console.log('submit');
-		search.boxes.radius = parseFloat(document.getElementById("radius").value);
 		search.query = document.getElementById("search").value;
+
+		function bootstrapRouteBoxes(){
+			var routeBoxes = new MyGlobal.routeBoxes({
+				radius: parseFloat(document.getElementById("radius").value),
+				path: routeSearch.grabFirstRoute(),
+				map: search.map
+			});
+			routeBoxes.draw();
+		}
+
 		var routeSearch = new MyGlobal.findRoutes({
 			originPlaceId: search.placeInputIds.originPlaceId,
 			destinationPlaceId: search.placeInputIds.destinationPlaceId,
 			directionsService: search.directionsService,
 			directionsDisplay: search.directionsDisplay,
 			travel_mode: search.travel_mode
-		});
+		}, function(){bootstrapRouteBoxes()});
 
 	})
 })
@@ -38,7 +47,7 @@ function MapSearch(config){
 	this.places = [];
 	this.placeInputIds;
 	this.routeRequest;
-	this.boxes = config.Boxes;
+	// this.boxes = config.Boxes;
 }
 
 MapSearch.prototype = {
@@ -76,11 +85,10 @@ MapSearch.prototype = {
 		this.placeInputs.destinationPlaceId = null;
 		this.placeInputs.originPlaceId = null;
 	},
-
-	initBoxes: function(path, map){
-		this.boxes.setBounds(path);
-		this.boxes.draw(map);
-	},
+	// initBoxes: function(path, map){
+	// 	this.boxes.setBounds(path);
+	// 	this.boxes.draw(map);
+	// },
 	searchByBoxes: function(bounds){
 		var me = this;
 		for (var i = 0; i < bounds.length; i++) {
@@ -150,36 +158,7 @@ MapSearch.prototype = {
 	}
 }
 
-var Boxes = {
-	radius: null,
-	boxpolys: null,
-	bounds: null,
-	routeBoxer: new RouteBoxer(),
-	setBounds: function(path){
-		this.bounds = this.routeBoxer.box(path, Boxes.radius);
-		this.boxpolys = new Array(this.bounds.length);
-	},
-	draw: function(map){
-		for (var i = 0; i < this.bounds.length; i++) {
-			this.boxpolys[i] = new google.maps.Rectangle({
-				bounds: this.bounds[i],
-				fillOpacity: 0,
-				strokeOpacity: 1.0,
-				strokeColor: '#000000',
-				strokeWeight: 1,
-				map: map
-			});
-		}
-	},
-	clear: function(){
-		if (this.boxpolys != null) {
-			for (var i = 0; i < this.boxpolys.length; i++) {
-				this.boxpolys[i].setMap(null);
-			}
-		}
-		this.boxpolys = null;
-	}
-}
+
 
 
 function placeExists(placeID){
