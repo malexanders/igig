@@ -21,6 +21,7 @@ $(document).on('ready', function(){
 		});
 
 		var destinationAutocomplete = new google.maps.places.Autocomplete(destinationInputElement);
+
 		destinationAutocomplete.bindTo('bounds', map);
 		destinationAutocomplete.addListener('place_changed', function() {
 			var place = destinationAutocomplete.getPlace();
@@ -34,7 +35,5 @@ $(document).on('ready', function(){
 			me.destinationPlace = place;
 			me.destinationPlaceId = place.place_id;
 		});
-
 	}
-
 })

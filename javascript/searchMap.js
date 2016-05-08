@@ -33,11 +33,15 @@ $(document).on('ready', function(){
 				map: search.map
 			});
 			routeBoxes.draw();
-			MyGlobal.radarSearchByBoxes(routeBoxes.bounds);
-
+			var radarSearch = new MyGlobal.radarSearch(search.placesService);
+			MyGlobal.radarSearchByBoxes(routeBoxes.bounds, search.query, radarSearch)
+		.then(function(places){
+			console.log(places);
+			alert("done");
 		});
-	})
-})
+		});
+	});
+});
 
 function MapSearch(config){
 	this.map;
@@ -109,8 +113,7 @@ MapSearch.prototype = {
 
 
 
-function placeExists(placeID){
-}
+
 
 
 

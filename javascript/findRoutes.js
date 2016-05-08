@@ -2,10 +2,12 @@ $(document).on('ready', function(){
 	MyGlobal.findRoutes = function(config){
 		var me = this;
 		this.response;
+		
 		this.directionsService = config.directionsService;
 		this.originPlaceId = config.originPlaceId;
 		this.destinationPlaceId = config.destinationPlaceId
 		this.travel_mode = config.travel_mode;
+
 		this.grabFirstRoute = function(){
 			return this.response.routes[0].overview_path; // first route from directions service response
 		};
