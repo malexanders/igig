@@ -6,9 +6,8 @@ $(document).on('ready', function(){
 		this.bounds = bounds;
 		var p1 = new Promise(function(resolve, reject) {
 			for (var i = 0; i < me.bounds.length; i++) {
-				(function(i) {
+				(function(i) { // Question: This wrapper function is necessary, why?
 					setTimeout(function() {
-
 						// Perform search on the bound and save the result
 						// Places are saved to the radarSearch object
 						me.radarSearch.execute(me.bounds[i], query)

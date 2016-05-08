@@ -34,12 +34,13 @@ $(document).on('ready', function(){
 			});
 			routeBoxes.draw();
 			var radarSearch = new MyGlobal.radarSearch(search.placesService);
-			MyGlobal.radarSearchByBoxes(routeBoxes.bounds, search.query, radarSearch)
+			var radarPromise = MyGlobal.radarSearchByBoxes(routeBoxes.bounds, search.query, radarSearch)
 		.then(function(places){
-			console.log(places);
 			alert("done");
 		});
+
 		});
+
 	});
 });
 
